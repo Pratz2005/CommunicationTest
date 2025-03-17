@@ -17,7 +17,7 @@ This project consists of two Python scripts:
 
 
 
-## **🛠️ Setup Instructions**
+## **Setup Instructions**
 
 1.Clone the Repo
 ```bash
@@ -25,19 +25,19 @@ git clone https://github.com/Pratz2005/CommunicationTest.git
 cd communicationtest
 ```
 
-2.**Make sure u add the relevant videos on which you want to run this pipeline to the dataset_videos directory
+2.**Make sure u add the relevant videos on which you want to run this pipeline to the dataset_videos directory**
 
-### **1️⃣ Create a Virtual Environment**
+### **Create a Virtual Environment**
 ```bash
 python -m venv .venv
 ```
 
-### **1️⃣ Activate the .venv**
+### **Activate the .venv**
 ```bash
 .venv\Scripts\activate
-source .venv/bin/activate //For MacOS/Linus
+source .venv/bin/activate //For MacOS/Linux
 ```
-### **1️⃣ install requirements.txt**
+### **install requirements.txt**
 ```bash
 pip install -r requirements.txt
 ```
