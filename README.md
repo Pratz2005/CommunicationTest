@@ -54,6 +54,27 @@ pip install -r requirements.txt
 
 ### Now you can run the dataprocessor.py file and then the transcriptionanalyzer.py file and see the results.
 
+## **Testing & Execution**
+This section describes how the programs were executed and tested.
+
+### **Testing `dataprocessor.py`**
+- Used multiple `.mp4` video files in `dataset_videos/` to ensure **batch processing** works.
+- Verified that each video’s **audio was extracted correctly**.
+- Confirmed that **Whisper transcribed the speech** without errors.
+- Ensured **sentiment analysis correctly categorized** transcriptions as **POSITIVE, NEGATIVE, or NEUTRAL**.
+- Checked that **CSV files were generated correctly** in `output_csv/`.
+
+### **Testing `transcriptionanalyser.py`**
+- Loaded different **CSV files** to ensure proper **data handling**.
+- Verified that the **histogram displayed word count correctly**.
+- Confirmed that the **sentiment bar chart displayed appropriate classifications**.
+
+### **Edge Cases Considered**
+- **Empty videos / silent parts** → Checked that **no empty transcriptions caused errors**.
+- **Long videos** → Ensured **large files didn't cause memory issues**.
+- **High-noise environments** → Verified that **Whisper handled speech well in noisy audio**.
+- **Multiple sentiment patterns** → Ensured **diverse phrases were classified accurately**.
+
 
 
 
