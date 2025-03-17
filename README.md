@@ -20,3 +20,9 @@ This project consists of two Python scripts:
 ### **1️⃣ Create a Virtual Environment**
 ```bash
 python -m venv .venv
+
+### **1️⃣ Activate the .venv**
+```bash
+.venv\Scripts\activate
+source .venv/bin/activate //For MacOS/Linus
+
