@@ -19,6 +19,10 @@ This project consists of two Python scripts:
 
 ## **Setup Instructions**
 
+## **Create a directory named dataset_videos and add the relevant videos in it**
+
+Since the driving video was too large it could not be pushed to github so I have not added it
+
 1.Clone the Repo
 ```bash
 git clone https://github.com/Pratz2005/CommunicationTest.git 
