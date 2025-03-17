@@ -1,0 +1,6 @@
+moviepy
+transformers
+speechrecognition
+pandas
+matplotlib
+librosa
