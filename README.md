@@ -15,14 +15,35 @@ This project consists of two Python scripts:
 
 ---
 
+
+
 ## **🛠️ Setup Instructions**
+
+1.Clone the Repo
+```bash
+git clone https://github.com/Pratz2005/CommunicationTest.git 
+cd communicationtest
+```
+
+2.**Make sure u add the relevant videos on which you want to run this pipeline to the dataset_videos directory
 
 ### **1️⃣ Create a Virtual Environment**
 ```bash
 python -m venv .venv
+```
 
 ### **1️⃣ Activate the .venv**
 ```bash
 .venv\Scripts\activate
 source .venv/bin/activate //For MacOS/Linus
+```
+### **1️⃣ install requirements.txt**
+```bash
+pip install -r requirements.txt
+```
+
+### Now you can run the dataprocessor.py file and then the transcriptionanalyser.py file and see the results.
+
+
+
 
