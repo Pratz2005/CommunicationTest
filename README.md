@@ -11,7 +11,7 @@ This project processes **video files** by:
 
 This project consists of two Python scripts:
 1. **`dataprocessor.py`** → Processes video files and generates a CSV with transcriptions and sentiments.
-2. **`transcriptionanalyser.py`** → Reads the generated CSV and creates **visualizations**.
+2. **`transcriptionanalyzer.py`** → Reads the generated CSV and creates **visualizations**.
 
 ---
 
@@ -46,7 +46,7 @@ source .venv/bin/activate //For MacOS/Linux
 pip install -r requirements.txt
 ```
 
-### Now you can run the dataprocessor.py file and then the transcriptionanalyser.py file and see the results.
+### Now you can run the dataprocessor.py file and then the transcriptionanalyzer.py file and see the results.
 
 
 
