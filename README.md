@@ -14,8 +14,14 @@ This project consists of two Python scripts:
 2. **`transcriptionanalyzer.py`** → Reads the generated CSV and creates **visualizations**.
 
 ---
-
-
+##  **Requirements**
+1. moviepy
+2. transformers
+3. speechrecognition
+4. pandas
+5. matplotlib
+6. librosa
+7. torch
 
 ## **Setup Instructions**
 
