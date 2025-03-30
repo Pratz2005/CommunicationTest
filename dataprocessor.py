@@ -5,6 +5,9 @@ import librosa
 from moviepy import *
 from transformers import WhisperProcessor, WhisperForConditionalGeneration, pipeline
 import boto3
+from botocore import UNSIGNED
+from botocore.config import Config
+import botocore
 import tempfile
 import shutil
 
@@ -12,7 +15,7 @@ class DataProcessor:
     def __init__(self, output_folder="output_csv", model_name="openai/whisper-small"):
         if os.path.exists("videos"):
             shutil.rmtree("videos")
-            
+
         self.output_folder = output_folder
         os.makedirs(self.output_folder, exist_ok=True)
 
@@ -25,12 +28,12 @@ class DataProcessor:
         self.classifier = pipeline("sentiment-analysis", model = "distilbert/distilbert-base-uncased-finetuned-sst-2-english")
 
     def list_s3_videos(self, bucket_name):
-        s3 = boto3.client("s3")
+        s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED))
         response = s3.list_objects_v2(Bucket=bucket_name)
         return [obj['Key'] for obj in response.get('Contents', []) if obj['Key'].endswith('.mp4')]
 
     def download_video_from_s3(self, bucket_name, s3_key):
-        s3 = boto3.client('s3')
+        s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED))
         video_name = os.path.splitext(os.path.basename(s3_key))[0]
         
         #Create a folder of the video name
