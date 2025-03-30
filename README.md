@@ -25,8 +25,6 @@ git clone https://github.com/Pratz2005/CommunicationTest.git
 cd communicationtest
 ```
 
-2.**Make sure u add the relevant videos on which you want to run this pipeline to the dataset_videos directory**
-
 ### **Create a Virtual Environment**
 ```bash
 python -m venv .venv
