@@ -1,0 +1,15 @@
+# Ignore dataset and generated output
+dataset_videos/
+videos/
+*.mp4
+*.wav
+*.csv
+
+# Ignore Python venv
+.venv/
+__pycache__/
+*.pyc
+
+# OS/Editor stuff
+.DS_Store
+Thumbs.db
