@@ -1,6 +1,8 @@
 moviepy
 transformers
-speechrecognition
 pandas
 matplotlib
 librosa
+torch
+torchaudio
+boto3

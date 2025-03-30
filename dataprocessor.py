@@ -4,10 +4,15 @@ import pandas as pd
 import librosa
 from moviepy import *
 from transformers import WhisperProcessor, WhisperForConditionalGeneration, pipeline
+import boto3
+import tempfile
+import shutil
 
 class DataProcessor:
-    def __init__(self, dataset_folder="dataset_videos", output_folder="output_csv", model_name="openai/whisper-small"):
-        self.dataset_folder = dataset_folder
+    def __init__(self, output_folder="output_csv", model_name="openai/whisper-small"):
+        if os.path.exists("videos"):
+            shutil.rmtree("videos")
+            
         self.output_folder = output_folder
         os.makedirs(self.output_folder, exist_ok=True)
 
@@ -17,8 +22,29 @@ class DataProcessor:
         self.model = WhisperForConditionalGeneration.from_pretrained(model_name).to(self.device)
 
         # Load Sentiment Analysis Model
-        self.classifier = pipeline("sentiment-analysis")
+        self.classifier = pipeline("sentiment-analysis", model = "distilbert/distilbert-base-uncased-finetuned-sst-2-english")
 
+    def list_s3_videos(self, bucket_name):
+        s3 = boto3.client("s3")
+        response = s3.list_objects_v2(Bucket=bucket_name)
+        return [obj['Key'] for obj in response.get('Contents', []) if obj['Key'].endswith('.mp4')]
+
+    def download_video_from_s3(self, bucket_name, s3_key):
+        s3 = boto3.client('s3')
+        video_name = os.path.splitext(os.path.basename(s3_key))[0]
+        
+        #Create a folder of the video name
+        video_folder = os.path.join("videos",video_name)
+        os.makedirs(video_folder, exist_ok=True)
+
+        local_path = os.path.join(video_folder, os.path.basename(s3_key))
+
+        with open(local_path, "wb") as f:
+            s3.download_fileobj(bucket_name, s3_key, f)
+
+        print(f"Downloaded {s3_key} to {local_path}")
+        return local_path
+    
     def extract_audio(self, video_path, audio_path):
         """
         Extracts audio from a video file and saves it as a WAV file.
@@ -76,10 +102,11 @@ class DataProcessor:
         return sentiment['label']
 
     def process_video(self, video_path):
-        """
-        Processes a single video file: extracts audio, segments it, transcribes, analyzes sentiment, and saves results to CSV.
-        """
-        audio_path = video_path.replace('.mp4', '.wav')
+        video_name = os.path.splitext(os.path.basename(video_path))[0]
+        video_folder = os.path.dirname(video_path)
+
+
+        audio_path = os.path.join(video_folder, f"{video_name}.wav")
         self.extract_audio(video_path, audio_path)
 
         segments = self.segment_audio(audio_path)
@@ -96,14 +123,13 @@ class DataProcessor:
         df.to_csv(output_csv, index=False)
         print(f"Processed: {output_csv}")
 
-    def process_all_videos(self):
-        """
-        Iterates through all videos in the dataset folder and processes them.
-        """
-        for file in os.listdir(self.dataset_folder):
-            if file.endswith(".mp4"):
-                self.process_video(os.path.join(self.dataset_folder, file))
+    def process_all_videos(self, bucket_name):
+        s3_keys = self.list_s3_videos(bucket_name)
+
+        for s3_key in s3_keys:
+            local_path = self.download_video_from_s3(bucket_name, s3_key)
+            self.process_video(local_path)
 
 if __name__ == "__main__":
     processor = DataProcessor()
-    processor.process_all_videos()
+    processor.process_all_videos(bucket_name="mycarvideobucket")
