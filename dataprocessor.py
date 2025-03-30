@@ -96,13 +96,33 @@ class DataProcessor:
 
     def sentiment_analysis(self, text):
         """
-        Performs sentiment analysis on the transcribed text.
+        Performs fine-grained sentiment analysis on the transcribed text.
         """
         if not text.strip():
-            return 'NEUTRAL'
+            return 'NEUTRAL', 0.0
 
         sentiment = self.classifier(text)[0]
-        return sentiment['label']
+        score = sentiment['score']
+        label = sentiment['label']
+
+        # Fine-grained categorization
+        if label == 'POSITIVE':
+            if score > 0.9:
+                return 'VERY POSITIVE', score
+            elif score > 0.6:
+                return 'POSITIVE', score
+            else:
+                return 'SLIGHTLY POSITIVE', score
+
+        elif label == 'NEGATIVE':
+            if score > 0.9:
+                return 'VERY NEGATIVE', score
+            elif score > 0.6:
+                return 'NEGATIVE', score
+            else:
+                return 'SLIGHTLY NEGATIVE', score
+
+        return 'NEUTRAL', score
 
     def process_video(self, video_path):
         video_name = os.path.splitext(os.path.basename(video_path))[0]
@@ -117,11 +137,11 @@ class DataProcessor:
 
         for start, end, segment_path in segments:
             transcription = self.transcribe_audio(segment_path)
-            sentiment = self.sentiment_analysis(transcription)
-            data.append([start, end, transcription, sentiment])
+            sentiment, confidence = self.sentiment_analysis(transcription)
+            data.append([start, end, transcription, sentiment, round(confidence,4)])
 
         # Save to CSV
-        df = pd.DataFrame(data, columns=['Start_Time', 'End_Time', 'Transcription', 'Sentiment'])
+        df = pd.DataFrame(data, columns=['Start_Time', 'End_Time', 'Transcription', 'Sentiment', 'Confidence'])
         output_csv = os.path.join(self.output_folder, os.path.basename(video_path).replace(".mp4", ".csv"))
         df.to_csv(output_csv, index=False)
         print(f"Processed: {output_csv}")
