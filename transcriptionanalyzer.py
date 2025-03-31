@@ -46,7 +46,7 @@ class TranscriptionAnalyzer:
         if not self.data_frames:
             raise ValueError("No data loaded. Call load_data() first.")
 
-        color_map = {"NEUTRAL": "gray", "POSITIVE": "green", "NEGATIVE": "red"}
+        color_map = {"NEUTRAL": "gray", "POSITIVE": "green", "NEGATIVE": "red", "VERY POSITIVE": "lime", "VERY NEGATIVE": "darkred"}
 
         for file_name, df in self.data_frames.items():
             sentiment_counts = df["Sentiment"].value_counts()
