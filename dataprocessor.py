@@ -8,6 +8,7 @@ import boto3
 from botocore import UNSIGNED
 from botocore.config import Config
 import shutil
+from chunking_strategy import FixedLengthChunking #SilenceBasedChunking to chunk based on when most words are spoken
 
 class DataProcessor:
     def __init__(self, output_folder="output_csv", model_name="openai/whisper-small"):
@@ -16,6 +17,7 @@ class DataProcessor:
 
         self.output_folder = output_folder
         os.makedirs(self.output_folder, exist_ok=True)
+        self.chunker = FixedLengthChunking(segment_length=5) #SilenceBasedChunking() for silence based chunking
 
         # Load Whisper Model
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -54,21 +56,8 @@ class DataProcessor:
         audio = video.audio
         audio.write_audiofile(audio_path, codec='pcm_s16le', fps=16000)  # Ensure 16kHz format
 
-    def segment_audio(self, audio_path, segment_length=5):
-        """
-        Segments audio into smaller chunks of `segment_length` seconds.
-        """
-        audio = AudioFileClip(audio_path)
-        duration = int(audio.duration)
-        segments = []
-
-        for start in range(0, duration, segment_length):
-            end = min(start + segment_length, duration)
-            segment_path = f"{audio_path[:-4]}_{start}-{end}.wav"
-            audio.subclipped(start, end).write_audiofile(segment_path, codec='pcm_s16le')
-            segments.append((start, end, segment_path))
-
-        return segments
+    def segment_audio(self, audio_path):
+        return self.chunker.segment(audio_path)
 
     def transcribe_audio(self, segment_path):
         # Load and preprocess the audio
@@ -140,7 +129,10 @@ class DataProcessor:
 
         # Save to CSV
         df = pd.DataFrame(data, columns=['Start_Time', 'End_Time', 'Transcription', 'Sentiment', 'Confidence'])
-        output_csv = os.path.join(self.output_folder, os.path.basename(video_path).replace(".mp4", ".csv"))
+
+        strategy_name = self.chunker.__class__.__name__.replace("Chunking", "").lower()
+
+        output_csv = os.path.join(self.output_folder, os.path.basename(video_path).replace(".mp4", f"_{strategy_name}.csv"))
         df.to_csv(output_csv, index=False)
         print(f"Processed: {output_csv}")
 

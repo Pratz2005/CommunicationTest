@@ -1,12 +1,14 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+from chunking_comparator import ChunkingComparator
 
 class TranscriptionAnalyzer:
     def __init__(self, folder_path):
         self.folder_path = folder_path
         self.data_files = self.get_csv_files()
         self.data_frames = {}
+        self.comparator = ChunkingComparator(folder=folder_path)
 
     def get_csv_files(self):
         return [f for f in os.listdir(self.folder_path) if f.endswith(".csv")]
@@ -46,7 +48,7 @@ class TranscriptionAnalyzer:
         if not self.data_frames:
             raise ValueError("No data loaded. Call load_data() first.")
 
-        color_map = {"NEUTRAL": "gray", "POSITIVE": "green", "NEGATIVE": "red", "VERY POSITIVE": "lime", "VERY NEGATIVE": "darkred"}
+        color_map = {"NEUTRAL": "gray", "POSITIVE": "green", "NEGATIVE": "red", "VERY POSITIVE": "lime", "VERY NEGATIVE": "darkred", "SLIGHTLY NEGATIVE": "lightcoral", "SLIGHTLY POSITIVE": "darkgreen"}
 
         for file_name, df in self.data_frames.items():
             sentiment_counts = df["Sentiment"].value_counts()
@@ -62,6 +64,11 @@ class TranscriptionAnalyzer:
             plt.grid(axis='y', linestyle='--', alpha=0.7)
             plt.show()
 
+    def compare_chunking_strategies(self):
+        print("CHUNKING STRATEGY COMPARISON")
+        self.comparator.summary_report()
+        self.comparator.plot_comparison()
+
     
 if __name__ == "__main__":
     folder_path = "output_csv" 
@@ -69,3 +76,4 @@ if __name__ == "__main__":
     analyzer.load_data()
     analyzer.plot_word_count_histogram()
     analyzer.plot_sentiment_distribution()
+    analyzer.compare_chunking_strategies()
