@@ -1,22 +1,23 @@
-import unittest
 import os
+import pytest
 from dataprocessor import DataProcessor
 
-class TestAudioSegmentation(unittest.TestCase):
-    def setUp(self):
-        self.dp = DataProcessor()
+@pytest.fixture(scope="module")
+def data_processor():
+    return DataProcessor()
 
-    def test_segmentation_output(self):
-        segments = self.dp.segment_audio("tests/test_audio.wav", segment_length=2)
+@pytest.fixture(scope="module")
+def test_audio_path():
+    path = "tests/test_audio.wav"
+    assert os.path.exists(path), f"File not found: {path}"
+    return path
 
-        # Ensure we got at least one segment
-        self.assertGreaterEqual(len(segments), 1)
+def test_audio_segmentation_output(data_processor, test_audio_path):
+    segments = data_processor.segment_audio(test_audio_path, segment_length=2)
 
-        # Check each segment
-        for start, end, file in segments:
-            self.assertTrue(os.path.exists(file), f"Segment file missing: {file}")
-            self.assertTrue(file.endswith('.wav'), f"Incorrect format: {file}")
-            self.assertGreater(end - start, 0, f"Invalid segment duration: {start}–{end}")
+    assert len(segments) >= 1, "No segments were created."
 
-if __name__ == '__main__':
-    unittest.main()
+    for start, end, file_path in segments:
+        assert os.path.exists(file_path), f"Segment file missing: {file_path}"
+        assert file_path.endswith(".wav"), f"Invalid segment format: {file_path}"
+        assert end - start > 0, f"Invalid segment duration: {start}–{end}"

@@ -1,25 +1,25 @@
-import unittest
+import pytest
 from dataprocessor import DataProcessor
 
-class TestSentimentAnalysis(unittest.TestCase):
-    def setUp(self):
-        self.dp = DataProcessor()
+@pytest.fixture(scope="module")
+def data_processor():
+    return DataProcessor()
 
-    def test_very_positive(self):
-        text = "I love this song!"
-        label, score = self.dp.sentiment_analysis(text)
-        self.assertIn(label, ['VERY POSITIVE', 'POSITIVE'])
-        self.assertGreater(score, 0.6)
+def test_very_postive(data_processor):
+    text = "I love this song!"
+    label, score = data_processor.sentiment_analysis(text)
+    assert label in ["VERY POSITIVE", "POSITIVE"]
+    assert score > 0.6
 
-    def test_very_negative(self):
-        text = "This is the worst thing ever. I'm so disappointed."
-        label, score = self.dp.sentiment_analysis(text)
-        self.assertIn(label, ['VERY NEGATIVE', 'NEGATIVE'])
-        self.assertGreater(score, 0.6)
+def test_very_negative(data_processor):
+    text = "This is the worst thing ever. I'm so disappointed."
+    label, score = data_processor.sentiment_analysis(text)
+    assert label in ["VERY NEGATIVE", "NEGATIVE"]
+    assert score > 0.6
 
-    def test_empty_text(self):
-        label, score = self.dp.sentiment_analysis("")
-        self.assertEqual(label, 'NEUTRAL')
+def test_empty_returns_neutral(data_processor):
+    text = ""
+    label, score = data_processor.sentiment_analysis(text)
+    assert label == 'NEUTRAL'
+    assert score == 0.0
 
-if __name__ == '__main__':
-    unittest.main()
