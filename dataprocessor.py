@@ -7,8 +7,6 @@ from transformers import WhisperProcessor, WhisperForConditionalGeneration, pipe
 import boto3
 from botocore import UNSIGNED
 from botocore.config import Config
-import botocore
-import tempfile
 import shutil
 
 class DataProcessor:
