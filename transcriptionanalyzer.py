@@ -65,7 +65,7 @@ class TranscriptionAnalyzer:
             plt.show()
 
     def compare_chunking_strategies(self):
-        print("CHUNKING STRATEGY COMPARISON")
+        print("\nCHUNKING STRATEGY COMPARISON")
         self.comparator.summary_report()
         self.comparator.plot_comparison()
 
