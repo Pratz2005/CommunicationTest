@@ -27,6 +27,12 @@ class TranscriptionAnalyzer:
 
             # Count words in each transcription segment
             df["Word_Count"] = df["Transcription"].fillna("").apply(lambda x: len(x.split()))
+            df["Sentiment"] = df["Sentiment"].replace({
+                "SLIGHTLY POSITIVE": "S. POS",
+                "SLIGHTLY NEGATIVE": "S. NEG",
+                "VERY POSITIVE": "V. POS",
+                "VERY NEGATIVE": "V. NEG"
+            })
 
             self.data_frames[file_name] = df
 
@@ -48,7 +54,7 @@ class TranscriptionAnalyzer:
         if not self.data_frames:
             raise ValueError("No data loaded. Call load_data() first.")
 
-        color_map = {"NEUTRAL": "gray", "POSITIVE": "green", "NEGATIVE": "red", "VERY POSITIVE": "lime", "VERY NEGATIVE": "darkred", "SLIGHTLY NEGATIVE": "lightcoral", "SLIGHTLY POSITIVE": "darkgreen"}
+        color_map = {"NEUTRAL": "gray", "POSITIVE": "green", "NEGATIVE": "red", "V. POS": "lime", "V. NEG": "darkred", "S. NEG": "lightcoral", "S. POS": "darkgreen"}
 
         for file_name, df in self.data_frames.items():
             sentiment_counts = df["Sentiment"].value_counts()
