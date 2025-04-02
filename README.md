@@ -14,6 +14,9 @@ This project processes **video files** by:
 This project consists of two Python scripts:
 1. **`dataprocessor.py`** → Processes video files and generates a CSV with transcriptions and sentiments.
 2. **`transcriptionanalyser.py`** → Reads the generated CSV and creates **visualizations**.
+3. **`cli_interface.py`""  → Is the Command Line Interface for the User.
+4. **`chunking_strategy.py`** → Has classes that implement fixed length chunking and silence based chunking
+5. **`chunking_comparator.py`** → Does the comparison for the two chunking strategies
 
 Note: You can generate csvs for both chunking strategies just by chaninging two lines of code n the data_processor.py file - importing the chunker and initialising it in the __init__ function. How to do so is given in the comments in the code.
 ---
