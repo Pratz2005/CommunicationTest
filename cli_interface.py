@@ -47,11 +47,12 @@ class CLIInterface:
         processor.process_all_videos(bucket_name=self.bucket_name)
         print("Video processing completed!\n")
 
-    def analyze_data(self):
+    def analyze_data(self):   
         print(f"\nLoading CSVs from {self.output_folder}...\n")
         analyzer = TranscriptionAnalyzer(self.output_folder)
         analyzer.load_data()
         analyzer.plot_word_count_histogram()
+        analyzer.plot_word_count_by_segment()
         analyzer.plot_sentiment_distribution()
         analyzer.compare_chunking_strategies()
         print("Analysis completed!\n")

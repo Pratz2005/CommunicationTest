@@ -6,7 +6,15 @@ from chunking_comparator import ChunkingComparator
 class TranscriptionAnalyzer:
     def __init__(self, folder_path):
         self.folder_path = folder_path
+
+        if not os.path.exists(self.folder_path):
+            raise FileNotFoundError(f"Folder '{self.folder_path}' does not exist. Please run transcription first.")
+        
         self.data_files = self.get_csv_files()
+
+        if not self.data_files:
+            raise FileNotFoundError(f"No CSV files found in folder '{self.folder_path}'. Did you run transcription?")
+
         self.data_frames = {}
         self.comparator = ChunkingComparator(folder=folder_path)
 
@@ -40,7 +48,6 @@ class TranscriptionAnalyzer:
         if not self.data_frames:
             raise ValueError("No data loaded. Call load_data() first.")
         
-
         for file_name, df in self.data_frames.items():
             if df['Start_Time'].isnull().all():
                 continue
@@ -91,13 +98,3 @@ class TranscriptionAnalyzer:
         print("\nCHUNKING STRATEGY COMPARISON")
         self.comparator.summary_report()
         self.comparator.plot_comparison()
-
-    
-if __name__ == "__main__":
-    folder_path = "output_csv" 
-    analyzer = TranscriptionAnalyzer(folder_path)
-    analyzer.load_data()
-    analyzer.plot_word_count_histogram()
-    analyzer.plot_word_count_by_segment()
-    analyzer.plot_sentiment_distribution()
-    analyzer.compare_chunking_strategies()

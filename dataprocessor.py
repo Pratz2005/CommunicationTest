@@ -143,6 +143,3 @@ class DataProcessor:
             local_path = self.download_video_from_s3(bucket_name, s3_key)
             self.process_video(local_path)
 
-if __name__ == "__main__":
-    processor = DataProcessor()
-    processor.process_all_videos(bucket_name="mycarvideobucket")
