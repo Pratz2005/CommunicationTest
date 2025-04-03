@@ -45,7 +45,7 @@ source .venv/bin/activate //For MacOS/Linux
 pip install -r requirements.txt
 ```
 
-### Now you can run the cli_interface.py file and see the results. This file has CLI user interface and calls the dataprocessor and transcriptionanalyzer class to return the chunked audio files and a csv containing the sentiment analysis and confidence of each chunk within eahc chunking strategy file
+### Now you can run the cli_interface.py file and see the results. This file has CLI user interface and calls the dataprocessor and transcriptionanalyzer class to return the chunked audio files and a csv containing the sentiment analysis and confidence of each chunk within each chunking strategy file
 
 ### Tests
 ### I also implemented basic unit tests for testing the audio, transcription and sentiment using pytests
