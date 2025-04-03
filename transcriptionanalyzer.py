@@ -39,8 +39,11 @@ class TranscriptionAnalyzer:
     def plot_word_count_histogram(self):
         if not self.data_frames:
             raise ValueError("No data loaded. Call load_data() first.")
+        
 
         for file_name, df in self.data_frames.items():
+            if df['Start_Time'].isnull().all():
+                continue
             plt.figure(figsize=(12, 6))
             plt.bar(df["Start_Time"], df["Word_Count"], width=4.5, align='edge', color='skyblue', edgecolor='black')
             plt.xlabel("Time (seconds)")
@@ -49,6 +52,20 @@ class TranscriptionAnalyzer:
             plt.xticks(rotation=45)
             plt.grid(axis='y', linestyle='--', alpha=0.7)
             plt.show()
+
+    def plot_word_count_by_segment(self):
+        if not self.data_frames:
+            raise ValueError("No data loaded. Call load_data() first.")
+        
+        for file_name, df in self.data_frames.items():
+            if df["Start_Time"].isnull().all():  # If silence-based, no time info
+                plt.figure(figsize=(12, 6))
+                plt.bar(range(len(df)), df["Word_Count"], color='purple', edgecolor='black')
+                plt.xlabel("Segment Index")
+                plt.ylabel("Word Count")
+                plt.title(f"Histogram of Words per Silence-Based Segment\n({file_name})")
+                plt.grid(axis='y', linestyle='--', alpha=0.7)
+                plt.show()
 
     def plot_sentiment_distribution(self):
         if not self.data_frames:
@@ -81,5 +98,6 @@ if __name__ == "__main__":
     analyzer = TranscriptionAnalyzer(folder_path)
     analyzer.load_data()
     analyzer.plot_word_count_histogram()
+    analyzer.plot_word_count_by_segment()
     analyzer.plot_sentiment_distribution()
     analyzer.compare_chunking_strategies()
